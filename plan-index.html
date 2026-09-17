@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Working Plan</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B0A10">
+
+<!-- iOS home-screen install support -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Working Plan">
+<link rel="apple-touch-icon" href="plan-icon-180.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#0B0A10;
+    --ink:#F5F0F7;
+    --ink-soft:#9E8FAE;
+    --line:#2E2438;
+    --income:#EC1E82;
+    --income-bg:#3A1229;
+    --creative:#B565F0;
+    --creative-bg:#2A1640;
+    --foundation:#6C7BD9;
+    --foundation-bg:#1E2242;
+    --rest:#E0609C;
+    --rest-bg:#3A1E2C;
+    --pmdd:#FF5C7A;
+    --pmdd-bg:#3D1A22;
+    --card:#161220;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Work Sans', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    position:relative;
+  }
+  .orb{
+    position:fixed;
+    border-radius:50%;
+    filter:blur(70px);
+    opacity:0.32;
+    pointer-events:none;
+    z-index:0;
+  }
+  .orb-1{width:320px;height:320px;background:var(--income);top:-110px;left:-90px;animation:drift1 20s ease-in-out infinite;}
+  .orb-2{width:280px;height:280px;background:var(--creative);bottom:-90px;right:-80px;animation:drift2 24s ease-in-out infinite;}
+  .orb-3{width:220px;height:220px;background:var(--foundation);top:45%;right:-90px;opacity:0.2;animation:drift3 28s ease-in-out infinite;}
+  @keyframes drift1{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(40px,60px) scale(1.15);}}
+  @keyframes drift2{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(-30px,-40px) scale(1.1);}}
+  @keyframes drift3{0%,100%{transform:translate(0,0);}50%{transform:translate(-50px,30px);}}
+  .wrap{max-width:640px;margin:0 auto;padding:28px 20px 60px;position:relative;z-index:1;}
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:1.9rem;
+    line-height:1.15;
+    margin:0 0 6px;
+    letter-spacing:-0.01em;
+    background:linear-gradient(100deg, var(--income), var(--creative));
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+    display:inline-block;
+  }
+  .subhead{
+    color:var(--ink-soft);
+    font-size:0.98rem;
+    line-height:1.5;
+    margin:0 0 22px;
+    max-width:46ch;
+  }
+  .tabs{
+    display:flex;
+    gap:8px;
+    margin-bottom:26px;
+    border-bottom:1px solid var(--line);
+  }
+  .tab{
+    font-family:'Work Sans', sans-serif;
+    font-size:0.92rem;
+    font-weight:600;
+    background:none;
+    border:none;
+    padding:10px 4px 12px;
+    color:var(--ink-soft);
+    cursor:pointer;
+    border-bottom:2px solid transparent;
+    margin-right:18px;
+  }
+  .tab.active{
+    color:var(--ink);
+    border-bottom:2px solid var(--income);
+  }
+  .subtabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+  .subtab{
+    font-family:'Work Sans', sans-serif;
+    font-size:0.85rem;
+    font-weight:600;
+    background:rgba(22,18,32,0.5);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:7px 16px;
+    color:var(--ink-soft);
+    cursor:pointer;
+  }
+  .subtab.active{
+    color:#fff;
+    background:var(--income);
+    border-color:var(--income);
+  }
+  .view{display:none;}
+  .view.active{display:block;}
+
+  .day-card{
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:18px 18px 16px;
+    margin-bottom:14px;
+    background:rgba(22,18,32,0.62);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  }
+  .day-card.rest{background:var(--rest-bg);border-color:transparent;}
+  .day-name{
+    font-family:'Fraunces', serif;
+    font-size:1.2rem;
+    font-weight:600;
+    margin:0 0 2px;
+  }
+  .day-focus{
+    font-size:0.85rem;
+    color:var(--ink-soft);
+    margin:0 0 12px;
+  }
+  .block{
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    padding:7px 0;
+    font-size:0.93rem;
+    line-height:1.4;
+    border-top:1px solid var(--line);
+  }
+  .block:first-of-type{border-top:none;}
+  .block{cursor:pointer;transition:opacity 0.15s;}
+  .block.done{opacity:0.4;text-decoration:line-through;}
+  .day-card.is-today{
+    border:1px solid var(--income);
+    box-shadow:0 0 0 1px var(--income), 0 0 24px rgba(236,30,130,0.25);
+  }
+  .today-badge{
+    display:inline-block;
+    font-size:0.68rem;
+    font-weight:600;
+    color:var(--income);
+    background:var(--income-bg);
+    padding:2px 8px;
+    border-radius:20px;
+    margin-left:8px;
+    vertical-align:middle;
+  }
+  .notes-toggle{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    background:none;
+    border:none;
+    color:var(--ink-soft);
+    font-family:'Work Sans', sans-serif;
+    font-size:0.85rem;
+    font-weight:600;
+    cursor:pointer;
+    padding:10px 0;
+    width:100%;
+  }
+  .notes-toggle .chev{transition:transform 0.2s;display:inline-block;}
+  .notes-toggle.open .chev{transform:rotate(90deg);}
+  .notes-body{display:none;}
+  .notes-body.open{display:block;}
+
+  .symptom-chip{
+    display:inline-block;
+    font-size:0.82rem;
+    font-weight:600;
+    padding:8px 14px;
+    border-radius:20px;
+    border:1px solid var(--line);
+    background:var(--card);
+    color:var(--ink-soft);
+    cursor:pointer;
+    margin:0 6px 8px 0;
+  }
+  .symptom-chip.active{
+    background:var(--pmdd);
+    border-color:var(--pmdd);
+    color:#fff;
+  }
+  .tracker-entry{
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:10px 12px;
+    margin-bottom:8px;
+    font-size:0.85rem;
+  }
+  .tracker-entry .t-date{color:var(--warm);font-weight:600;font-size:0.78rem;margin-bottom:3px;}
+  .tracker-entry .t-symptoms{color:var(--pmdd);margin-bottom:3px;}
+  .tracker-entry .t-note{color:var(--ink-soft);}
+  .tracker-entry .t-del{float:right;background:none;border:none;color:var(--ink-soft);cursor:pointer;font-size:0.85rem;}
+
+  .reminder-card{
+    position:relative;
+    border-radius:16px;
+    padding:22px 20px;
+    margin-bottom:14px;
+    overflow:hidden;
+    box-shadow:0 4px 24px rgba(0,0,0,0.4);
+  }
+  .reminder-card p{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:1.08rem;
+    line-height:1.5;
+    color:#fff;
+    margin:0;
+    position:relative;
+    z-index:1;
+  }
+  .reminder-del{
+    position:absolute;
+    top:10px;right:12px;
+    background:rgba(0,0,0,0.25);
+    border:none;
+    color:#fff;
+    width:24px;height:24px;
+    border-radius:50%;
+    cursor:pointer;
+    font-size:0.9rem;
+    z-index:2;
+  }
+
+  .reminder-overlay{
+    position:fixed;inset:0;
+    background:rgba(5,3,10,0.9);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:50;
+    padding:24px;
+  }
+  .reminder-overlay.open{display:flex;}
+  .reminder-overlay-card{
+    border-radius:20px;
+    padding:36px 26px;
+    max-width:400px;
+    width:100%;
+    text-align:center;
+    box-shadow:0 0 60px rgba(236,30,130,0.35);
+  }
+  .reminder-overlay-card p{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:1.4rem;
+    line-height:1.5;
+    color:#fff;
+    margin:0 0 24px;
+  }
+  .reminder-overlay-actions{display:flex;gap:10px;justify-content:center;}
+  .reminder-overlay-actions button{
+    border:1px solid rgba(255,255,255,0.4);
+    background:rgba(255,255,255,0.1);
+    color:#fff;
+    border-radius:10px;
+    padding:10px 18px;
+    font-size:0.9rem;
+    cursor:pointer;
+  }
+
+  /* Cycle tab */
+  .season-card{
+    position:relative;
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:16px 16px 16px 20px;
+    margin-bottom:14px;
+    background:rgba(22,18,32,0.62);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    overflow:hidden;
+  }
+  .season-card::before{
+    content:'';
+    position:absolute;
+    left:0;top:0;bottom:0;
+    width:4px;
+  }
+  .season-card.winter::before{background:var(--rest);}
+  .season-card.spring::before{background:var(--income);}
+  .season-card.summer::before{background:var(--creative);}
+  .season-card.autumn-early::before{background:var(--foundation);}
+  .season-card.autumn-late::before{background:var(--pmdd);}
+  .season-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:2px;flex-wrap:wrap;}
+  .season-name{font-family:'Fraunces', serif;font-size:1.2rem;font-weight:600;margin:0;}
+  .season-days{font-size:0.82rem;font-weight:600;color:var(--ink-soft);white-space:nowrap;}
+  .season-hormone{font-size:0.85rem;color:var(--ink-soft);margin:0 0 12px;}
+  .season-card.autumn-late .season-hormone{color:var(--pmdd);font-weight:600;}
+  .dot.pmdd{background:var(--pmdd);}
+  .adhd-note{
+    font-size:0.85rem;
+    font-style:italic;
+    color:var(--ink-soft);
+    line-height:1.5;
+    margin:10px 0 0;
+    padding-top:10px;
+    border-top:1px dashed var(--line);
+  }
+  .adhd-note b{font-style:normal;color:var(--ink);}
+  .track-note{
+    background:var(--pmdd-bg);
+    border-radius:10px;
+    padding:14px 16px;
+    font-size:0.88rem;
+    line-height:1.55;
+    color:var(--ink);
+    margin:0 0 18px;
+  }
+  .track-note b{color:var(--pmdd);}
+  .cycle-bar{
+    display:flex;
+    width:100%;
+    height:28px;
+    border-radius:8px;
+    overflow:hidden;
+    margin:6px 0 22px;
+    font-size:0;
+  }
+  .cycle-bar span{
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Work Sans', sans-serif;
+    font-size:0.7rem;font-weight:600;color:#fff;
+  }
+  .cb-winter{background:var(--rest);flex:5;}
+  .cb-spring{background:var(--income);flex:8;}
+  .cb-summer{background:var(--creative);flex:3;}
+  .cb-autumn-e{background:var(--foundation);flex:7;}
+  .cb-autumn-l{background:var(--pmdd);flex:5;}
+
+  /* Collapsible cards */
+  .card-toggle-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    cursor:pointer;
+  }
+  .card-toggle-header .card-chev{
+    flex-shrink:0;
+    font-size:1.4rem;
+    color:var(--ink-soft);
+    transition:transform 0.2s;
+    line-height:1;
+  }
+  .card-toggle-header.open .card-chev{transform:rotate(90deg);color:var(--income);}
+  .card-toggle-body{display:none;margin-top:12px;}
+  .card-toggle-body.open{display:block;}
+  .day-card.is-today .card-toggle-header .card-chev{color:var(--income);}
+  .hint{font-size:0.85rem;color:var(--ink-soft);font-style:italic;line-height:1.4;}
+  .season-card.you-are-here{border-color:var(--income);box-shadow:0 0 0 1px var(--income), 0 0 24px rgba(236,30,130,0.25);}
+  .here-badge{
+    display:inline-block;
+    font-size:0.68rem;
+    font-weight:600;
+    color:var(--income);
+    background:var(--income-bg);
+    padding:2px 8px;
+    border-radius:20px;
+    margin-left:8px;
+    vertical-align:middle;
+  }
+  .dot{
+    width:9px;height:9px;border-radius:50%;
+    margin-top:5px;flex-shrink:0;
+  }
+  .dot.income{background:var(--income);}
+  .dot.creative{background:var(--creative);}
+  .dot.foundation{background:var(--foundation);}
+  .dot.rest{background:var(--rest);}
+  .hrs{
+    color:var(--ink-soft);
+    font-variant-numeric:tabular-nums;
+    white-space:nowrap;
+    font-size:0.85rem;
+  }
+  .legend{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+    margin:18px 0 26px;
+    padding:14px 16px;
+    background:rgba(22,18,32,0.62);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    border:1px solid var(--line);
+    border-radius:10px;
+    font-size:0.82rem;
+    color:var(--ink-soft);
+  }
+  .legend span{display:flex;align-items:center;gap:6px;}
+  .legend .dot{margin-top:0;}
+
+  .flag{
+    background:var(--foundation-bg);
+    border-radius:10px;
+    padding:14px 16px;
+    font-size:0.88rem;
+    line-height:1.5;
+    color:var(--ink);
+    margin-top:8px;
+  }
+  .flag b{color:var(--foundation);}
+
+  /* Monthly */
+  .month{
+    position:relative;
+    padding:0 0 26px 24px;
+    border-left:2px solid var(--line);
+    margin-left:6px;
+  }
+  .month:last-child{border-left:2px solid transparent;padding-bottom:0;}
+  .month::before{
+    content:'';
+    position:absolute;
+    left:-7px;top:2px;
+    width:12px;height:12px;
+    border-radius:50%;
+    background:var(--income);
+    border:3px solid var(--paper);
+  }
+  .month-label{
+    font-size:0.78rem;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    color:var(--ink-soft);
+    margin-bottom:2px;
+  }
+  .month-title{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:1.25rem;
+    margin:0 0 8px;
+  }
+  .month-body{
+    font-size:0.93rem;
+    line-height:1.55;
+  }
+  .month-body ul{margin:6px 0 10px;padding-left:18px;}
+  .month-body li{margin-bottom:4px;}
+  .shift{
+    display:inline-block;
+    font-size:0.78rem;
+    font-weight:600;
+    padding:2px 9px;
+    border-radius:20px;
+    margin-top:6px;
+  }
+  .shift.up{background:var(--income-bg);color:var(--income);}
+  .shift.down{background:var(--creative-bg);color:var(--creative);}
+  .shift.new{background:var(--rest-bg);color:var(--rest);}
+
+  .checkpoint{
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-size:0.95rem;
+    color:var(--income);
+    margin-top:10px;
+  }
+
+  /* Editable checklists */
+  .list-card{
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:16px 16px 12px;
+    margin-bottom:14px;
+    background:rgba(22,18,32,0.62);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  }
+  .list-card h3{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:1.1rem;
+    margin:0 0 10px;
+  }
+  .item-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:8px 0;
+    border-top:1px solid var(--line);
+  }
+  .item-row:first-of-type{border-top:none;}
+  .item-row input[type="checkbox"]{
+    width:18px;height:18px;
+    flex-shrink:0;
+    accent-color:var(--foundation);
+  }
+  .item-text{
+    flex:1;
+    font-size:0.93rem;
+    line-height:1.4;
+    outline:none;
+    padding:2px 4px;
+    border-radius:4px;
+  }
+  .item-text:focus{background:var(--foundation-bg);}
+  .item-text.done{
+    color:var(--ink-soft);
+    text-decoration:line-through;
+  }
+  .item-text.pushed{
+    color:var(--warm);
+    font-style:italic;
+  }
+  .remove-btn{
+    background:none;
+    border:none;
+    color:var(--ink-soft);
+    font-size:1.1rem;
+    line-height:1;
+    cursor:pointer;
+    padding:4px 6px;
+    flex-shrink:0;
+  }
+  .remove-btn:hover{color:var(--rest);}
+  .add-row{
+    display:flex;
+    gap:8px;
+    margin-top:10px;
+  }
+  .add-row input{
+    flex:1;
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:9px 10px;
+    font-family:'Work Sans', sans-serif;
+    font-size:0.9rem;
+    background:var(--paper);
+  }
+  .add-row input:focus{outline:2px solid var(--foundation);}
+  .add-btn{
+    background:var(--foundation);
+    color:#fff;
+    border:none;
+    border-radius:6px;
+    padding:0 16px;
+    font-size:0.9rem;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .add-btn:active{opacity:0.8;}
+  .empty-note{
+    color:var(--ink-soft);
+    font-size:0.85rem;
+    padding:6px 0;
+  }
+  .day-tag{
+    display:inline-block;
+    font-size:0.72rem;
+    font-weight:600;
+    color:var(--foundation);
+    background:var(--foundation-bg);
+    padding:2px 8px;
+    border-radius:20px;
+    margin-bottom:10px;
+  }
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+<div class="wrap">
+
+  <h1>Your working plan</h1>
+
+  <button onclick="whatNow()" style="width:100%;background:linear-gradient(135deg,var(--income),var(--foundation));border:none;border-radius:14px;padding:16px;color:#fff;font-family:'Fraunces', serif;font-weight:600;font-size:1.05rem;cursor:pointer;box-shadow:0 0 30px rgba(236,30,130,0.25);margin-bottom:18px;">🎯 What should I do right now?</button>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showView('weekly', this)">Weekly rhythm</button>
+    <button class="tab" onclick="showView('monthly', this)">6-month roadmap</button>
+    <button class="tab" onclick="showView('cycle', this)">Cycle</button>
+    <button class="tab" onclick="showView('lists', this)">Lists</button>
+    <button class="tab" onclick="showView('reminders', this)">Reminders</button>
+  </div>
+
+  <!-- WEEKLY VIEW -->
+  <div id="weekly" class="view active">
+
+    <div class="flag"><b>One project per working day, held the whole day.</b> Task-switching between projects is the thing to design around — so each day below is a single focus, not a set of blocks. The only recurring exception is the daily anchor: short, fixed-time, and habitual enough that it doesn't function as a switch.</div>
+
+    <div class="day-card">
+      <p class="day-name">Every working day</p>
+      <p class="day-focus">Daily anchor — same time, same task, every day</p>
+      <div class="block"><span class="dot creative"></span><span>Substack/Instagram — edit and schedule from existing written content (the writing itself already happened on Monday/weekends)</span><span class="hrs">30m</span></div>
+    </div>
+
+    <div class="day-card">
+      <p class="day-name">Tuesday &amp; Wednesday</p>
+      <p class="day-focus">Recovery Skool — two protected days, one project</p>
+      <div class="block"><span class="dot income"></span><span>Recovery/self-reclamation Skool — turning the framework into real content: modules, welcome sequence, written pieces, then community engagement once live</span><span class="hrs">6h/day</span></div>
+    </div>
+
+    <div class="day-card">
+      <p class="day-name">Thursday</p>
+      <p class="day-focus">Poetry Skool — one protected day, one project</p>
+      <div class="block"><span class="dot income"></span><span>Poetry Skool — build/launch tasks and community engagement together, solo pace</span><span class="hrs">6h</span></div>
+    </div>
+
+    <div class="day-card">
+      <p class="day-name">Friday</p>
+      <p class="day-focus">One rotating focus — pick a single thing, not several</p>
+      <div class="block"><span class="dot income"></span><span>Ebook draft, ADHD app / product listing admin, or whichever Skool is behind — choose one per week and stay in it</span><span class="hrs">5h</span></div>
+      <div class="block"><span class="dot foundation"></span><span>Week review + contest-link processing, same "admin mode" as the rest of the day rather than a separate switch</span><span class="hrs">1h</span></div>
+    </div>
+
+    <div class="day-card">
+      <p class="day-name">Every other Friday</p>
+      <p class="day-focus">Reel filming — replaces the rotating focus that day</p>
+      <div class="block"><span class="dot foundation"></span><span>Set up tripod once, film several handwriting reels back to back (vary pieces/backdrop so they don't look identical)</span><span class="hrs">1.5h</span></div>
+      <div class="block"><span class="dot foundation"></span><span>Quick edit/caption pass, add to the reel ready-pile</span><span class="hrs">30m</span></div>
+    </div>
+
+    <div class="day-card rest">
+      <p class="day-name">Monday &amp; weekends</p>
+      <p class="day-focus">Writing only — no admin, no business tasks</p>
+      <div class="block"><span class="dot rest"></span><span>Daily writing continues here as it already does — this is where the Substack/IG content pool keeps refilling itself</span></div>
+      <div class="block"><span class="dot rest"></span><span>Mini-course and poetry collection live here too, if and only if there's a genuine pull to do them — not scheduled, not obligatory</span></div>
+      <div class="block"><span class="dot rest"></span><span>Buffer day if a working day overruns, or work longer Tue–Fri instead</span></div>
+    </div>
+
+    <div class="flag"><b>Standing exception —</b> if the Employment Tribunal / ACAS process needs attention, it takes priority over the day's single focus. Keep half a day flexible in weeks it's active — treat it as that day's one project, not an add-on.</div>
+
+    <button class="notes-toggle" id="notes-toggle" onclick="toggleNotes()"><span class="chev">&rsaquo;</span> More notes</button>
+    <div class="notes-body" id="notes-body">
+
+      <div class="legend">
+        <span><span class="dot income"></span>Income-first</span>
+        <span><span class="dot foundation"></span>Foundation</span>
+        <span><span class="dot creative"></span>Daily anchor (small, fixed)</span>
+        <span><span class="dot rest"></span>Writing-only, no admin</span>
+      </div>
+
+      <div class="flag"><b>See the Cycle tab</b> for how a heavy Tuesday/Wednesday or Skool-launch week should actually shift depending on where you are in your cycle — the week above is the default, not a fixed law.</div>
+
+      <div class="flag"><b>Instagram CTA default —</b> Substack, until the Skools launch (then Recovery Skool takes over as primary). Give the Magic Dopamine Ball its own dedicated post occasionally rather than folding it into every caption. One clear ask per post, not several.</div>
+
+      <div class="flag"><b>Backburnered for ~6 months —</b> YouTube is fully parked, not just de-prioritized. Poetry collection curation and the mini-course are optional spare-time footnotes on Monday/weekends only — no slot, no obligation, no guilt if they don't move.</div>
+
+      <div class="flag"><b>Poetry Skool — solo for now.</b> Building and running it alone; the idea of bringing in another poet to co-run is parked until it's live and going well — no planning or splitting needed for that yet.</div>
+
+      <div class="flag"><b>Recovery Skool is the primary offer.</b> Tuesday and Wednesday are both dedicated to it. Two ebooks are planned at 6 hours each for a first draft — kept deliberately small in scope so "quick" stays true.</div>
+
+      <div class="flag"><b>Looking ahead, not yet active —</b> possible future 1:1 coaching clients from Recovery Skool, and a monthly local group coaching night with an art activity. Both would draw on content already built by then — nothing to plan now, just noted so it isn't lost.</div>
+
+    </div>
+
+  </div>
+
+  <!-- MONTHLY VIEW -->
+  <div id="monthly" class="view">
+
+    <div class="month">
+      <p class="month-label">Month 1</p>
+      <p class="month-title">Build Recovery Skool (primary), Poetry Skool (secondary)</p>
+      <div class="month-body">
+        <ul>
+          <li>Recovery/self-reclamation Skool takes priority — the 8-stage spine turned into modules, welcome sequence, first written pieces</li>
+          <li>Poetry Skool built solo, lighter pace — structure, seed content from the existing archive</li>
+          <li>Ebook backburnered to opportunistic time, not protected — a deliberate trade for now</li>
+          <li>Instagram funnel messaging shifts toward "community coming soon" for both Skools</li>
+          <li>Magic Dopamine Ball — list on Etsy + Gumroad (it's live but has never been listed anywhere but bio)</li>
+        </ul>
+        <span class="shift up">Recovery Skool hours up (8–10h/week while the spine becomes real content)</span>
+      </div>
+    </div>
+
+    <div class="month">
+      <p class="month-label">Month 2</p>
+      <p class="month-title">Launch Recovery Skool, keep Poetry Skool moving</p>
+      <div class="month-body">
+        <ul>
+          <li>Recovery Skool opens — founding-member offer, Instagram/coaching account relaunch, DMs from past supporters (e.g. Michelle) as a soft outreach list</li>
+          <li>Poetry Skool opens on its own lighter timeline, cross-referenced but not merged</li>
+          <li>Magic Dopamine Ball gets its proper Instagram launch — dedicated post/Stories, not just a bio link</li>
+        </ul>
+        <span class="checkpoint">Checkpoint: is Recovery Skool converting — DMs, saves, asks to join — or does the offer need reworking?</span>
+      </div>
+    </div>
+
+    <div class="month">
+      <p class="month-label">Month 3</p>
+      <p class="month-title">Ship, then start the next thing</p>
+      <div class="month-body">
+        <ul>
+          <li>Recovery Skool moves to lighter maintenance rhythm once launched and stable</li>
+          <li>Ebook 1 ships; ebook 2 begins</li>
+          <li>ADHD app listing goes live if not already</li>
+        </ul>
+        <span class="shift down">Skool hours drop back to maintenance level</span>
+      </div>
+    </div>
+
+    <div class="month">
+      <p class="month-label">Month 4</p>
+      <p class="month-title">Review what's actually earning</p>
+      <div class="month-body">
+        <ul>
+          <li>Look honestly at which stream is converting — double down there over the others</li>
+          <li>Ebook 2 continues; contest submissions from the shortlist ongoing in writing time</li>
+          <li>Skool community deepens — feedback from founding members shapes next content</li>
+        </ul>
+        <span class="checkpoint">Checkpoint: nine-month goal pace-check — ahead, on track, or behind?</span>
+      </div>
+    </div>
+
+    <div class="month">
+      <p class="month-label">Month 5</p>
+      <p class="month-title">Scale the winner</p>
+      <div class="month-body">
+        <ul>
+          <li>Reallocate hours toward whichever stream is proving itself (Skool, Substack, or ebooks)</li>
+          <li>First real gap opens for the mini-course, poetry collection, or YouTube if income streams are stable — none required, all optional</li>
+        </ul>
+        <span class="shift new">Optional: book or poetry-collection time reintroduced if capacity allows</span>
+      </div>
+    </div>
+
+    <div class="month">
+      <p class="month-label">Month 6</p>
+      <p class="month-title">Midpoint review</p>
+      <div class="month-body">
+        <ul>
+          <li>Full check against the £20k floor target — what's the real run-rate so far</li>
+          <li>Decide what the next three months protect and what gets dropped</li>
+          <li>Re-plan the weekly rhythm for months 7–9 based on actual data, not the original guess</li>
+        </ul>
+        <span class="checkpoint">This is the point to rebuild this document, not just keep following it.</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CYCLE VIEW -->
+  <div id="cycle" class="view">
+
+    <p class="subhead" style="margin-bottom:10px;">A ~28-day cycle as a rough default. Your real numbers will vary — track 2–3 cycles and come back to adjust the day ranges below.</p>
+
+    <div class="list-card" style="margin-bottom:14px;">
+      <button class="notes-toggle" id="tracker-toggle" onclick="toggleGeneric('tracker')"><span class="chev">&rsaquo;</span> Symptom tracker — log today</button>
+      <div class="notes-body" id="tracker-body">
+        <p class="hint" style="margin:10px 0 8px;">Tap what applies today, add a note if useful, then save. Builds the real data behind the season notes below.</p>
+        <div id="symptom-chips">
+          <span class="symptom-chip" data-symptom="AuDHD flare-up">AuDHD flare-up</span>
+          <span class="symptom-chip" data-symptom="Insomnia">Insomnia</span>
+          <span class="symptom-chip" data-symptom="Low mood">Low mood</span>
+          <span class="symptom-chip" data-symptom="Anxiety">Anxiety</span>
+          <span class="symptom-chip" data-symptom="Fatigue">Fatigue</span>
+          <span class="symptom-chip" data-symptom="Brain fog">Brain fog</span>
+        </div>
+        <textarea id="tracker-note" placeholder="Anything else worth noting…" style="width:100%;min-height:60px;border:1px solid var(--line);border-radius:8px;padding:10px;background:var(--paper);color:var(--ink);font-family:'Work Sans', sans-serif;font-size:0.9rem;margin:8px 0;"></textarea>
+        <button onclick="saveTrackerEntry()" style="background:var(--income);color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:0.85rem;font-weight:600;cursor:pointer;">Save today's entry</button>
+
+        <div style="margin-top:16px;">
+          <button class="notes-toggle" id="tracker-history-toggle" onclick="toggleGeneric('tracker-history')" style="padding:8px 0;"><span class="chev">&rsaquo;</span> View past entries</button>
+          <div class="notes-body" id="tracker-history-body">
+            <div id="tracker-list" style="margin-top:8px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="home-card" style="padding:14px 16px;">
+      <p style="font-size:0.85rem;font-weight:600;margin:0 0 8px;">Where am I right now?</p>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <input type="date" id="cycle-start" value="2026-08-22" style="flex:1;min-width:140px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--paper);color:var(--ink);font-family:'Work Sans', sans-serif;font-size:0.9rem;">
+        <input type="number" id="cycle-length" min="18" max="45" value="25" style="width:64px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--paper);color:var(--ink);font-family:'Work Sans', sans-serif;font-size:0.9rem;">
+        <button class="btn-ghost-cycle" onclick="saveCycleStart()" style="background:var(--income);color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:0.85rem;font-weight:600;cursor:pointer;">Set</button>
+      </div>
+      <p class="hint" style="margin:6px 0 0;">Start date of your last period, and your average cycle length in days.</p>
+      <p id="cycle-today-note" class="hint" style="margin:10px 0 0;"></p>
+    </div>
+
+    <div class="track-note" style="margin-top:0;background:var(--pmdd-bg);"><b>Personal correction, not the generic model:</b> your actual mental low runs from ~14 to ~10 days before your period — that overlaps the end of spring, all of summer, and the start of early autumn below, not the "late autumn" window most generic cycle content points to. The season notes below have been adjusted to reflect that; the days right before your period may actually be more workable for you than the generic model assumes, based on what you've tracked so far.</div>
+
+    <div class="track-note" style="margin-top:0;"><b>Hyperfocus doesn't follow the seasons.</b> Keep a running list of the next 2–3 things worth a long uninterrupted stretch (a Skool module, an ebook draft), so whenever hyperfocus shows up — in any season — you drop into that list instead of the calendar's plan for the day. Leave a soft buffer after any hyperfocus block; nothing time-sensitive should sit right after one.</div>
+
+    <div class="cycle-bar" aria-hidden="true">
+      <span class="cb-winter">W</span><span class="cb-spring">Sp</span><span class="cb-summer">Su</span><span class="cb-autumn-e">Ae</span><span class="cb-autumn-l">Al</span>
+    </div>
+
+    <div class="season-card winter">
+      <div class="season-top">
+        <p class="season-name">Winter — menstrual</p>
+        <p class="season-days">Days 1–5 (~5 days)</p>
+      </div>
+      <p class="season-hormone">Oestrogen and progesterone both low. Lowest energy point of the month.</p>
+      <div class="block"><span class="dot rest"></span><span>Rest as the goal, not a fallback — this overlaps your Monday/weekend writing-only days if timing lines up</span></div>
+      <div class="block"><span class="dot foundation"></span><span>Admin, reflection, light review only — no new launches, no hard deadlines due here</span></div>
+      <p class="adhd-note"><b>ADHD:</b> if hyperfocus does show up here, let it — don't override it just because winter "should" be rest. Rest is the default, not a rule.</p>
+    </div>
+
+    <div class="season-card spring">
+      <div class="season-top">
+        <p class="season-name">Spring — follicular</p>
+        <p class="season-days">Days 6–13 (~8 days)</p>
+      </div>
+      <p class="season-hormone">Oestrogen climbing steadily. Good early on — but your tracked low-mood window (~14 days pre-period) typically starts near the end of this phase.</p>
+      <div class="block"><span class="dot income"></span><span>Best window for the Recovery Skool build days, Skool launches, hard creative work, pitching — front-load these earlier in spring rather than the last couple of days</span></div>
+      <div class="block"><span class="dot pmdd"></span><span>Toward the end of this window, start watching for the mood dip rather than assuming energy keeps climbing right up to ovulation</span></div>
+      <p class="adhd-note"><b>ADHD:</b> your best window for hyperfocus-friendly deep work — but treat it as opportunity, not obligation. If it doesn't arrive, drop to lighter tasks rather than forcing it.</p>
+    </div>
+
+    <div class="season-card summer">
+      <div class="season-top">
+        <p class="season-name">Summer — ovulation</p>
+        <p class="season-days">Days 14–16 (~2–3 days)</p>
+      </div>
+      <p class="season-hormone">Generically the "peak energy" window — but this sits inside your tracked low-mood stretch. Don't default to more demanding or people-facing work here.</p>
+      <div class="block"><span class="dot pmdd"></span><span>Treat as reduced-capacity by default, not a visibility-work peak — skip assuming reel filming or launch pushes belong here just because the generic model says so</span></div>
+      <div class="block"><span class="dot foundation"></span><span>If energy genuinely feels good on a given cycle, that's a bonus — but don't plan demanding tasks here in advance</span></div>
+      <p class="adhd-note"><b>ADHD:</b> low mood and low executive function often compound here for you specifically — keep tasks small and optional rather than assuming a "burst" window like the generic model suggests.</p>
+      <p class="adhd-note"><b>Watch for:</b> AuDHD symptom flare-ups and disrupted sleep are commonly reported around this phase — if that matches your pattern, treat a rough night or a harder sensory day as expected here, not a sign something's wrong.</p>
+    </div>
+
+    <div class="season-card autumn-early">
+      <div class="season-top">
+        <p class="season-name">Autumn — early luteal</p>
+        <p class="season-days">Days 17–23 (~7 days)</p>
+      </div>
+      <p class="season-hormone">The first part of this window (up to ~10 days before your period) is still likely inside your low-mood stretch — capacity may return earlier than this phase's generic description suggests, but don't assume it on day one.</p>
+      <div class="block"><span class="dot pmdd"></span><span>Early part of this phase — still protected, similar treatment to summer above</span></div>
+      <div class="block"><span class="dot foundation"></span><span>Once past ~10 days before your period, this is where detail work — editing, admin, finishing what spring started — genuinely fits again for you</span></div>
+      <p class="adhd-note"><b>ADHD:</b> finishing is harder than starting — once capacity returns, treat this as "resume the hyperfocus list" rather than fresh admin, so momentum carries instead of a cold start.</p>
+    </div>
+
+    <div class="season-card autumn-late">
+      <div class="season-top">
+        <p class="season-name">Autumn — late luteal</p>
+        <p class="season-days">Days 24–28 (~5 days)</p>
+      </div>
+      <p class="season-hormone">Generic PMDD window — but based on what you've tracked, your worst mental low has typically already passed by this point. Still worth protecting by default, but don't assume it's automatically your hardest stretch.</p>
+      <div class="block"><span class="dot pmdd"></span><span>Keep it lighter and lower-pressure as a default, but stay open to it being more workable than the generic model assumes — adjust as more cycles confirm this</span></div>
+      <div class="block"><span class="dot pmdd"></span><span>No new commitments agreed here if avoidable — Skool partnerships, contracts, big asks all wait, regardless of how capable you feel in the moment</span></div>
+      <div class="block"><span class="dot pmdd"></span><span>Physical/PMS symptoms can still sit here even if the mental low has eased — thin the calendar for that reason alone if needed</span></div>
+      <p class="adhd-note"><b>ADHD:</b> executive function may still dip here independent of mood — keep any maintenance list short and concrete either way.</p>
+      <p class="adhd-note"><b>Watch for:</b> this is the classic window for AuDHD symptom exacerbation and insomnia in a lot of premenstrual research — if sleep goes first, treat that as the early warning sign to lighten the week further, not just the mood dip.</p>
+    </div>
+
+    <div class="track-note"><b>Worth doing first:</b> track 2–3 cycles (dates, energy, mood, PMDD onset) before treating these day ranges as fixed.</div>
+
+  </div>
+
+  <!-- LISTS VIEW -->
+  <div id="lists" class="view">
+    <p class="subhead" style="margin-bottom:14px;">Tap to check off, click text to edit, + to add. Saved automatically on this device.</p>
+
+    <div class="subtabs">
+      <button class="subtab active" onclick="showSublist('daily', this)">Daily</button>
+      <button class="subtab" onclick="showSublist('housework', this)">Housework</button>
+      <button class="subtab" onclick="showSublist('admin', this)">Weekly admin</button>
+      <button class="subtab" onclick="showSublist('body', this)">Body</button>
+      <button class="subtab" onclick="showSublist('mealprep', this)">Meal prep</button>
+    </div>
+
+    <div id="daily-sub" class="sublist" style="display:block;">
+      <p class="hint" style="margin:0 0 10px;">Ticks clear automatically at midnight — the list itself stays, only the check marks reset. Use the › button to push an item to tomorrow instead of ticking it off today.</p>
+      <div class="list-card">
+        <span class="day-tag">Editable</span>
+        <div id="daily-list"></div>
+        <div class="add-row">
+          <input type="text" id="daily-input" placeholder="Add a non-negotiable…" onkeydown="if(event.key==='Enter'){addItem('daily')}">
+          <button class="add-btn" onclick="addItem('daily')">Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="housework-sub" class="sublist" style="display:none;">
+      <p class="hint" style="margin:0 0 10px;">Tap the → next to any task to set the smallest possible first move — shown under the task as a low-effort way in.</p>
+      <div class="list-card">
+        <span class="day-tag">Editable</span>
+        <div id="housework-list"></div>
+        <div class="add-row">
+          <input type="text" id="housework-input" placeholder="Add a task…" onkeydown="if(event.key==='Enter'){addItem('housework')}">
+          <button class="add-btn" onclick="addItem('housework')">Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="admin-sub" class="sublist" style="display:none;">
+      <div class="list-card">
+        <span class="day-tag">Editable</span>
+        <div id="admin-list"></div>
+        <div class="add-row">
+          <input type="text" id="admin-input" placeholder="Add a task…" onkeydown="if(event.key==='Enter'){addItem('admin')}">
+          <button class="add-btn" onclick="addItem('admin')">Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="body-sub" class="sublist" style="display:none;">
+      <div class="list-card">
+        <span class="day-tag">Editable</span>
+        <div id="body-list"></div>
+        <div class="add-row">
+          <input type="text" id="body-input" placeholder="Add something…" onkeydown="if(event.key==='Enter'){addItem('body')}">
+          <button class="add-btn" onclick="addItem('body')">Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="mealprep-sub" class="sublist" style="display:none;">
+      <div class="list-card" style="margin-bottom:14px;">
+        <button class="notes-toggle" id="hyperfocus-toggle" onclick="toggleGeneric('hyperfocus')"><span class="chev">&rsaquo;</span> Hyperfocus foods — quick, low-decision options</button>
+        <div class="notes-body" id="hyperfocus-body">
+          <p style="font-weight:600;margin:10px 0 4px;">Snacks</p>
+          <p style="margin:0 0 10px;color:var(--ink-soft);">Potato egg muffins · Chia seed pudding · Granola</p>
+          <p style="font-weight:600;margin:10px 0 4px;">Breakfast/brunch</p>
+          <p style="margin:0 0 10px;color:var(--ink-soft);">Sourdough, avo, eggs, tomatoes · Yoghurt, banana and nuts</p>
+          <p style="font-weight:600;margin:10px 0 4px;">Sides</p>
+          <p style="margin:0 0 10px;color:var(--ink-soft);">Batch-cooked veg</p>
+          <p style="font-weight:600;margin:10px 0 4px;">Mains</p>
+          <p style="margin:0;color:var(--ink-soft);">Chilli fajitas · Goats cheese, bean &amp; sun-dried tomato dip · Quick noodles with tofu · Carrots, halloumi, harissa, yoghurt · Jacket potato</p>
+        </div>
+      </div>
+      <div class="list-card">
+        <span class="day-tag">Editable</span>
+        <div id="mealprep-list"></div>
+        <div class="add-row">
+          <input type="text" id="mealprep-input" placeholder="Add something…" onkeydown="if(event.key==='Enter'){addItem('mealprep')}">
+          <button class="add-btn" onclick="addItem('mealprep')">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REMINDERS VIEW -->
+  <div id="reminders" class="view">
+    <p class="subhead" style="margin-bottom:14px;">Memories and lines that hold true even when you can't feel them. Add whenever one lands.</p>
+
+    <button onclick="showRandomReminder()" style="width:100%;background:linear-gradient(135deg,var(--income),var(--creative));border:none;border-radius:14px;padding:16px;color:#fff;font-family:'Fraunces', serif;font-weight:600;font-size:1.05rem;cursor:pointer;box-shadow:0 0 30px rgba(236,30,130,0.3);margin-bottom:18px;">✦ I'm struggling — show me one</button>
+
+    <div class="add-row" style="margin-bottom:18px;">
+      <input type="text" id="reminder-input" placeholder="Add a memory or line that matters…" onkeydown="if(event.key==='Enter'){addReminder()}">
+      <button class="add-btn" onclick="addReminder()">Add</button>
+    </div>
+
+    <div id="reminder-grid"></div>
+  </div>
+
+</div>
+
+<div class="reminder-overlay" id="reminder-overlay" onclick="if(event.target===this) closeReminderOverlay()">
+  <div class="reminder-overlay-card" id="reminder-overlay-card">
+    <p id="reminder-overlay-text"></p>
+    <div class="reminder-overlay-actions">
+      <button onclick="showRandomReminder()">Another</button>
+      <button onclick="closeReminderOverlay()">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="reminder-overlay" id="whatnow-overlay" onclick="if(event.target===this) closeWhatNow()">
+  <div class="reminder-overlay-card" id="whatnow-card" style="background:linear-gradient(135deg,var(--income),var(--foundation));">
+    <p class="hint" id="whatnow-context" style="color:rgba(255,255,255,0.8);margin:0 0 10px;"></p>
+    <p id="whatnow-text"></p>
+    <p id="whatnow-firststep" style="font-style:italic;color:rgba(255,255,255,0.85);font-size:0.95rem;margin:-14px 0 20px;"></p>
+    <div class="reminder-overlay-actions">
+      <button onclick="whatNowDone()">✅ Doing it</button>
+      <button onclick="whatNow()">Another</button>
+      <button onclick="closeWhatNow()">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function showSublist(id, btn){
+  document.querySelectorAll('.sublist').forEach(s => s.style.display = 'none');
+  document.getElementById(id + '-sub').style.display = 'block';
+  document.querySelectorAll('.subtab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function showView(id, btn){
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// --- Editable checklists (housework / admin / daily / meal prep) ---
+const defaults = {
+  daily: [
+    {text:'Take medication / supplements', done:false},
+    {text:'Eat something proper', done:false},
+    {text:'Move your body, even briefly', done:false},
+    {text:'Water', done:false}
+  ],
+  housework: [
+    {text:'Wash + change bedding', done:false, firstStep:'Just strip one corner of the bed'},
+    {text:'Food shop', done:false, firstStep:'Just open the list app'},
+    {text:'Bins out', done:false, firstStep:'Just walk to the bin'},
+    {text:'Hoover / floors', done:false, firstStep:'Just get the hoover out of the cupboard'},
+    {text:'Bathroom clean', done:false, firstStep:'Just pick up one product'}
+  ],
+  admin: [
+    {text:'Check bank/budget', done:false},
+    {text:'Reply to outstanding emails', done:false},
+    {text:'Process saved contest links → list + calendar', done:false},
+    {text:'ET1 / tribunal admin (if active)', done:false}
+  ],
+  body: [
+    {text:'Move — walk, stretch, whatever counts today', done:false},
+    {text:'Water', done:false},
+    {text:'Proper lunch break away from the desk', done:false},
+    {text:'Get outside', done:false},
+    {text:'Wind-down before bed', done:false}
+  ],
+  mealprep: [
+    {text:'Plan the week\'s meals', done:false},
+    {text:'Write the shopping list', done:false},
+    {text:'Batch-cook a base (rice, grains, protein)', done:false},
+    {text:'Portion into containers', done:false}
+  ]
+};
+
+function loadList(key){
+  const raw = localStorage.getItem('plan-' + key);
+  if(raw){
+    try{ return JSON.parse(raw); }catch(e){}
+  }
+  return defaults[key];
+}
+
+function saveList(key, items){
+  localStorage.setItem('plan-' + key, JSON.stringify(items));
+}
+
+function renderList(key){
+  const items = loadList(key);
+  const container = document.getElementById(key + '-list');
+  container.innerHTML = '';
+  if(items.length === 0){
+    container.innerHTML = '<div class="empty-note">Nothing here yet — add something below.</div>';
+    return;
+  }
+  items.forEach((item, i) => {
+    const row = document.createElement('div');
+    row.className = 'item-row';
+
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.checked = item.done;
+    cb.onchange = () => {
+      const list = loadList(key);
+      list[i].done = cb.checked;
+      if(cb.checked) list[i].pushed = false;
+      saveList(key, list);
+      renderList(key);
+    };
+
+    const text = document.createElement('div');
+    text.className = 'item-text' + (item.done ? ' done' : '') + (item.pushed ? ' pushed' : '');
+    text.contentEditable = true;
+    text.innerText = item.text;
+    text.onblur = () => {
+      const list = loadList(key);
+      list[i].text = text.innerText.trim();
+      saveList(key, list);
+    };
+
+    const textWrap = document.createElement('div');
+    textWrap.style.flex = '1';
+    textWrap.appendChild(text);
+    if(item.firstStep){
+      const fs = document.createElement('div');
+      fs.style.cssText = 'font-size:0.78rem;color:var(--warm);font-style:italic;margin-top:2px;';
+      fs.textContent = '→ ' + item.firstStep;
+      textWrap.appendChild(fs);
+    }
+
+    row.appendChild(cb);
+    row.appendChild(textWrap);
+
+    const stepBtn = document.createElement('button');
+    stepBtn.className = 'remove-btn';
+    stepBtn.title = 'Add/edit a tiny first step';
+    stepBtn.innerHTML = '→';
+    stepBtn.onclick = () => {
+      const list = loadList(key);
+      const current = list[i].firstStep || '';
+      const val = prompt('The smallest possible first physical move (optional):', current);
+      if(val !== null){
+        list[i].firstStep = val.trim();
+        saveList(key, list);
+        renderList(key);
+      }
+    };
+    row.appendChild(stepBtn);
+
+    if(key === 'daily'){
+      const push = document.createElement('button');
+      push.className = 'remove-btn';
+      push.title = 'Push to tomorrow';
+      push.innerHTML = '&rsaquo;';
+      push.onclick = () => {
+        const list = loadList(key);
+        list[i].pushed = !list[i].pushed;
+        if(list[i].pushed) list[i].done = false;
+        saveList(key, list);
+        renderList(key);
+      };
+      row.appendChild(push);
+    }
+
+    const del = document.createElement('button');
+    del.className = 'remove-btn';
+    del.innerHTML = '&times;';
+    del.onclick = () => {
+      const list = loadList(key);
+      list.splice(i, 1);
+      saveList(key, list);
+      renderList(key);
+    };
+    row.appendChild(del);
+
+    container.appendChild(row);
+  });
+}
+
+function addItem(key){
+  const input = document.getElementById(key + '-input');
+  const val = input.value.trim();
+  if(!val) return;
+  const list = loadList(key);
+  list.push({text: val, done: false});
+  saveList(key, list);
+  input.value = '';
+  renderList(key);
+}
+
+renderList('housework');
+renderList('admin');
+renderList('body');
+renderList('mealprep');
+
+// --- Daily non-negotiables: ticks clear at midnight, list itself persists ---
+function todayDateStr(){
+  const d = new Date();
+  return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
+}
+function resetDailyIfNewDay(){
+  const lastReset = localStorage.getItem('daily-last-reset');
+  const today = todayDateStr();
+  if(lastReset !== today){
+    const list = loadList('daily');
+    const cleared = list.map(item => ({ text: item.text, done: false, pushed: false }));
+    saveList('daily', cleared);
+    localStorage.setItem('daily-last-reset', today);
+  }
+}
+resetDailyIfNewDay();
+renderList('daily');
+
+// --- Weekly task check-off (auto-resets each new week) ---
+function getWeekKey(){
+  const d = new Date();
+  const onejan = new Date(d.getFullYear(),0,1);
+  const week = Math.ceil((((d - onejan) / 86400000) + onejan.getDay()+1)/7);
+  return d.getFullYear() + '-w' + week;
+}
+
+function loadProgress(){
+  try{
+    const raw = localStorage.getItem('weekly-progress');
+    const data = raw ? JSON.parse(raw) : null;
+    if(!data || data.week !== getWeekKey()) return {week:getWeekKey(), done:[]};
+    return data;
+  }catch(e){ return {week:getWeekKey(), done:[]}; }
+}
+
+function saveProgress(progress){
+  try{ localStorage.setItem('weekly-progress', JSON.stringify(progress)); }
+  catch(e){}
+}
+
+function initTaskCheckoff(){
+  const blocks = document.querySelectorAll('#weekly .day-card .block');
+  const progress = loadProgress();
+  blocks.forEach((b,i) => {
+    b.dataset.taskId = i;
+    if(progress.done.includes(i)) b.classList.add('done');
+    b.addEventListener('click', () => {
+      b.classList.toggle('done');
+      const p = loadProgress();
+      const id = Number(b.dataset.taskId);
+      if(b.classList.contains('done')){
+        if(!p.done.includes(id)) p.done.push(id);
+      } else {
+        p.done = p.done.filter(x => x !== id);
+      }
+      p.week = getWeekKey();
+      saveProgress(p);
+    });
+  });
+}
+
+function highlightToday(){
+  const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const today = dayNames[new Date().getDay()];
+  document.querySelectorAll('#weekly .day-card').forEach(card => {
+    const nameEl = card.querySelector('.day-name');
+    if(!nameEl) return;
+    if(nameEl.textContent.includes(today)){
+      card.classList.add('is-today');
+      const badge = document.createElement('span');
+      badge.className = 'today-badge';
+      badge.textContent = 'Today';
+      nameEl.appendChild(badge);
+    }
+  });
+}
+
+initTaskCheckoff();
+highlightToday();
+
+function makeCollapsible(cardSelector, headerSelectors, accordion){
+  document.querySelectorAll(cardSelector).forEach(card => {
+    const headerEls = headerSelectors.map(sel => card.querySelector(sel)).filter(Boolean);
+    if(headerEls.length === 0) return;
+    const header = document.createElement('div');
+    header.className = 'card-toggle-header';
+    const textWrap = document.createElement('div');
+    textWrap.style.flex = '1';
+    card.insertBefore(header, headerEls[0]);
+    headerEls.forEach(el => textWrap.appendChild(el));
+    header.appendChild(textWrap);
+    const chev = document.createElement('span');
+    chev.className = 'card-chev';
+    chev.innerHTML = '&rsaquo;';
+    header.appendChild(chev);
+    const body = document.createElement('div');
+    body.className = 'card-toggle-body';
+    Array.from(card.children).forEach(child => {
+      if(child !== header) body.appendChild(child);
+    });
+    card.appendChild(body);
+    header.addEventListener('click', () => {
+      const isOpen = body.classList.contains('open');
+      if(accordion){
+        document.querySelectorAll(cardSelector + ' .card-toggle-body.open').forEach(b => {
+          b.classList.remove('open');
+          const h = b.parentElement.querySelector('.card-toggle-header');
+          if(h) h.classList.remove('open');
+        });
+      }
+      if(!isOpen){ body.classList.add('open'); header.classList.add('open'); }
+      else { header.classList.remove('open'); }
+    });
+  });
+}
+
+makeCollapsible('#weekly .day-card', ['.day-name', '.day-focus'], true);
+makeCollapsible('#monthly .month', ['.month-label', '.month-title'], true);
+makeCollapsible('#cycle .season-card', ['.season-top', '.season-hormone'], true);
+
+document.querySelectorAll('#weekly .day-card.is-today .card-toggle-body').forEach(b => {
+  b.classList.add('open');
+  const h = b.parentElement.querySelector('.card-toggle-header');
+  if(h) h.classList.add('open');
+});
+
+// --- Cycle tracking ---
+const seasonRanges28 = [
+  {key:'winter', from:1, to:5},
+  {key:'spring', from:6, to:13},
+  {key:'summer', from:14, to:16},
+  {key:'autumn-early', from:17, to:23},
+  {key:'autumn-late', from:24, to:28}
+];
+const seasonNames = {winter:'winter', spring:'spring', summer:'summer', 'autumn-early':'early autumn', 'autumn-late':'late autumn (PMDD window)'};
+
+function getScaledRanges(length){
+  const factor = length / 28;
+  const ranges = seasonRanges28.map(s => ({key:s.key, from:Math.round(s.from*factor) || 1, to:Math.round(s.to*factor)}));
+  ranges[ranges.length-1].to = length;
+  return ranges;
+}
+
+function getCycleDay(startDateStr, length){
+  const start = new Date(startDateStr + 'T00:00:00');
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const diffDays = Math.floor((today - start) / 86400000);
+  return ((diffDays % length) + length) % length + 1;
+}
+
+function seasonForDay(day, length){
+  const ranges = getScaledRanges(length);
+  return (ranges.find(s => day >= s.from && day <= s.to) || ranges[0]).key;
+}
+
+function updateCycleDisplay(){
+  const startDateStr = localStorage.getItem('cycle-start-date');
+  const length = Number(localStorage.getItem('cycle-length')) || 25;
+  const note = document.getElementById('cycle-today-note');
+  document.querySelectorAll('.season-card').forEach(c => {
+    c.classList.remove('you-are-here');
+    const badge = c.querySelector('.here-badge');
+    if(badge) badge.remove();
+  });
+  if(!startDateStr){
+    if(note) note.textContent = 'Set your last period start date to see where you are today.';
+    return;
+  }
+  const day = getCycleDay(startDateStr, length);
+  const seasonKey = seasonForDay(day, length);
+  if(note) note.textContent = 'Cycle day ' + day + ' of ' + length + ' — currently in ' + seasonNames[seasonKey] + '.';
+  const card = document.querySelector('#cycle .season-card.' + seasonKey);
+  if(card){
+    card.classList.add('you-are-here');
+    const nameEl = card.querySelector('.season-name');
+    if(nameEl && !nameEl.querySelector('.here-badge')){
+      const badge = document.createElement('span');
+      badge.className = 'here-badge';
+      badge.textContent = 'You are here';
+      nameEl.appendChild(badge);
+    }
+    document.querySelectorAll('#cycle .season-card .card-toggle-body.open').forEach(b => {
+      b.classList.remove('open');
+      const h = b.parentElement.querySelector('.card-toggle-header');
+      if(h) h.classList.remove('open');
+    });
+    const body = card.querySelector('.card-toggle-body');
+    const header = card.querySelector('.card-toggle-header');
+    if(body) body.classList.add('open');
+    if(header) header.classList.add('open');
+  }
+}
+
+function saveCycleStart(){
+  const val = document.getElementById('cycle-start').value;
+  const lengthVal = Number(document.getElementById('cycle-length').value) || 25;
+  if(!val) return;
+  localStorage.setItem('cycle-start-date', val);
+  localStorage.setItem('cycle-length', lengthVal);
+  updateCycleDisplay();
+}
+
+const savedStart = localStorage.getItem('cycle-start-date');
+const savedLength = localStorage.getItem('cycle-length');
+if(savedStart) document.getElementById('cycle-start').value = savedStart;
+document.getElementById('cycle-length').value = savedLength || 25;
+updateCycleDisplay();
+
+function toggleNotes(){
+  document.getElementById('notes-body').classList.toggle('open');
+  document.getElementById('notes-toggle').classList.toggle('open');
+}
+
+function toggleGeneric(name){
+  document.getElementById(name + '-body').classList.toggle('open');
+  document.getElementById(name + '-toggle').classList.toggle('open');
+}
+
+// --- Symptom tracker ---
+let activeSymptoms = [];
+document.addEventListener('click', (e) => {
+  if(e.target.classList && e.target.classList.contains('symptom-chip')){
+    const s = e.target.dataset.symptom;
+    e.target.classList.toggle('active');
+    if(activeSymptoms.includes(s)){
+      activeSymptoms = activeSymptoms.filter(x => x !== s);
+    } else {
+      activeSymptoms.push(s);
+    }
+  }
+});
+
+function loadTracker(){
+  try{ return JSON.parse(localStorage.getItem('symptom-tracker')) || []; }
+  catch(e){ return []; }
+}
+function saveTrackerList(list){
+  localStorage.setItem('symptom-tracker', JSON.stringify(list));
+}
+
+function saveTrackerEntry(){
+  const note = document.getElementById('tracker-note').value.trim();
+  if(activeSymptoms.length === 0 && !note) return;
+  const list = loadTracker();
+  const today = new Date();
+  const dateStr = today.toLocaleDateString(undefined, {weekday:'short', month:'short', day:'numeric'});
+  list.unshift({ date: dateStr, symptoms: [...activeSymptoms], note });
+  saveTrackerList(list);
+
+  document.querySelectorAll('.symptom-chip.active').forEach(c => c.classList.remove('active'));
+  activeSymptoms = [];
+  document.getElementById('tracker-note').value = '';
+  renderTracker();
+}
+
+function renderTracker(){
+  const list = loadTracker();
+  const container = document.getElementById('tracker-list');
+  if(list.length === 0){
+    container.innerHTML = '<p class="hint">No entries yet.</p>';
+    return;
+  }
+  container.innerHTML = '';
+  list.forEach((entry, i) => {
+    const div = document.createElement('div');
+    div.className = 'tracker-entry';
+    div.innerHTML = `<button class="t-del" onclick="deleteTrackerEntry(${i})">&times;</button>
+      <div class="t-date">${entry.date}</div>
+      ${entry.symptoms.length ? '<div class="t-symptoms">' + entry.symptoms.join(', ') + '</div>' : ''}
+      ${entry.note ? '<div class="t-note">' + entry.note + '</div>' : ''}`;
+    container.appendChild(div);
+  });
+}
+
+function deleteTrackerEntry(i){
+  const list = loadTracker();
+  list.splice(i, 1);
+  saveTrackerList(list);
+  renderTracker();
+}
+
+renderTracker();
+
+// --- Reminders ---
+const reminderGradients = [
+  'linear-gradient(135deg, #EC1E82, #B565F0)',
+  'linear-gradient(135deg, #6C7BD9, #EC1E82)',
+  'linear-gradient(135deg, #B565F0, #E0609C)',
+  'linear-gradient(135deg, #FF5C7A, #6C7BD9)',
+  'linear-gradient(135deg, #E0609C, #B565F0)'
+];
+
+function loadReminders(){
+  try{ return JSON.parse(localStorage.getItem('reminders')) || []; }
+  catch(e){ return []; }
+}
+function saveReminders(list){
+  localStorage.setItem('reminders', JSON.stringify(list));
+}
+
+function addReminder(){
+  const input = document.getElementById('reminder-input');
+  const val = input.value.trim();
+  if(!val) return;
+  const list = loadReminders();
+  list.unshift(val);
+  saveReminders(list);
+  input.value = '';
+  renderReminders();
+}
+
+function deleteReminder(i){
+  const list = loadReminders();
+  list.splice(i, 1);
+  saveReminders(list);
+  renderReminders();
+}
+
+function renderReminders(){
+  const list = loadReminders();
+  const grid = document.getElementById('reminder-grid');
+  if(list.length === 0){
+    grid.innerHTML = '<p class="empty-note">Nothing saved yet — add a line, a memory, anything that steadies you.</p>';
+    return;
+  }
+  grid.innerHTML = '';
+  list.forEach((text, i) => {
+    const card = document.createElement('div');
+    card.className = 'reminder-card';
+    card.style.background = reminderGradients[i % reminderGradients.length];
+    card.innerHTML = `<button class="reminder-del" onclick="deleteReminder(${i})">&times;</button><p>${text}</p>`;
+    grid.appendChild(card);
+  });
+}
+
+function showRandomReminder(){
+  const list = loadReminders();
+  if(list.length === 0){
+    alert('Add a memory or quote first — then this will always have something for you.');
+    return;
+  }
+  const pick = list[Math.floor(Math.random() * list.length)];
+  const idx = list.indexOf(pick);
+  document.getElementById('reminder-overlay-text').textContent = pick;
+  document.getElementById('reminder-overlay-card').style.background = reminderGradients[idx % reminderGradients.length];
+  document.getElementById('reminder-overlay').classList.add('open');
+}
+function closeReminderOverlay(){
+  document.getElementById('reminder-overlay').classList.remove('open');
+}
+
+// --- Unified "What now" decider (same-origin: Daily + Housework + Cycle context) ---
+let whatNowPick = null;
+
+function whatNow(){
+  const daily = loadList('daily').map((item,i) => ({...item, source:'daily', idx:i})).filter(t => !t.done && !t.pushed);
+  const housework = loadList('housework').map((item,i) => ({...item, source:'housework', idx:i})).filter(t => !t.done);
+
+  const pool = daily.length > 0 ? daily : housework;
+  const card = document.getElementById('whatnow-card');
+
+  if(pool.length === 0){
+    document.getElementById('whatnow-context').textContent = '';
+    document.getElementById('whatnow-text').textContent = "Nothing outstanding in Daily or Housework right now — genuinely clear.";
+    document.getElementById('whatnow-firststep').textContent = '';
+    card.querySelector('.reminder-overlay-actions').style.display = 'none';
+    document.getElementById('whatnow-overlay').classList.add('open');
+    return;
+  }
+  card.querySelector('.reminder-overlay-actions').style.display = 'flex';
+
+  whatNowPick = pool[Math.floor(Math.random()*pool.length)];
+
+  const cycleNote = document.getElementById('cycle-today-note');
+  const cycleText = cycleNote ? cycleNote.textContent : '';
+  document.getElementById('whatnow-context').textContent = (whatNowPick.source === 'daily' ? 'From your non-negotiables' : 'From housework') + (cycleText ? ' — ' + cycleText : '');
+  document.getElementById('whatnow-text').textContent = whatNowPick.text;
+  document.getElementById('whatnow-firststep').textContent = whatNowPick.firstStep ? ('First move: ' + whatNowPick.firstStep) : '';
+
+  document.getElementById('whatnow-overlay').classList.add('open');
+}
+
+function whatNowDone(){
+  if(whatNowPick){
+    const list = loadList(whatNowPick.source);
+    list[whatNowPick.idx].done = true;
+    saveList(whatNowPick.source, list);
+    renderList(whatNowPick.source);
+  }
+  closeWhatNow();
+}
+
+function closeWhatNow(){
+  document.getElementById('whatnow-overlay').classList.remove('open');
+  whatNowPick = null;
+}
+
+renderReminders();
+
+// Gentle morning surface — once per day, before 11am, only if reminders exist
+(function morningReminder(){
+  const list = loadReminders();
+  if(list.length === 0) return;
+  const now = new Date();
+  const todayStr = now.getFullYear() + '-' + (now.getMonth()+1) + '-' + now.getDate();
+  const lastShown = localStorage.getItem('reminder-morning-shown');
+  if(lastShown !== todayStr && now.getHours() < 11){
+    localStorage.setItem('reminder-morning-shown', todayStr);
+    setTimeout(() => showRandomReminder(), 500);
+  }
+})();
+
+if ("serviceWorker" in navigator){
+  navigator.serviceWorker.register("service-worker.js");
+}
+</script>
+</body>
+</html>
